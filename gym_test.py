@@ -1,24 +1,19 @@
 import gym
 import tensorflow as tf
-import errno
-import os
 from agent import PolicyGradientAgent
 
 n_inputs = 4
 
 
-def show_result(model_path, n_max_steps=1000):
-
-    if not os.path.exists(model_path):
-        raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), 'policy_net_pg.ckpt')
+def show_result(model_path, n_max_steps=3000):
 
     pga = PolicyGradientAgent()
-    saver = tf.train.Saver()
     env = gym.make("CartPole-v0")
     obs = env.reset()
 
     X = tf.placeholder(tf.float32, shape=[None, n_inputs])
     action, logits = pga.create_model(X)
+    saver = tf.train.Saver()
 
     with tf.Session() as sess:
         saver.restore(sess, model_path)
